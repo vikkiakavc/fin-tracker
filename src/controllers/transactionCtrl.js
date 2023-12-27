@@ -3,7 +3,7 @@ const router = express.Router()
 const db = require('../db/index')
 const Transactions = db.transactions
 const auth = require('../middleware/auth')
-const validCurrencyCodes = ['USD', 'EUR', 'GBP', 'JPY', 'CAD', 'AUD'];
+const validCurrencyCodes = ['USD', 'EUR', 'GBP', 'JPY', 'CAD', 'AUD', 'INR'];
 
 router.post('/transactions', auth, async (req, res) => {
     try {
