@@ -52,25 +52,26 @@ router.get('/reports', auth, async (req, res) => {
             },
         });
 
-        // Get user-specific budget for the specified month
+        // Get user-specific budget for the specified month and year
         const budget = await Budgets.findOne({
             where: {
                 userId: req.user.id,
                 month: month.toLowerCase(),
+                year: parseInt(year)
             },
         });
         console.log(budget)
 
         // Convert amounts to the client-specified currency
         const transactionsInClientCurrency = await Promise.all(transactions.map(async (transaction) => {
-            const convertedAmount = await convertCurrency(transaction.amount, transaction.currency, currency)
+            const convertedAmount = await convertCurrency(transaction.amount, transaction.currency, currency.toUpperCase())
             return { ...transaction.toJSON(), amount: convertedAmount, currency: currency };
         }));
 
         // Convert budget to the client-specified currency
         const budgetInClientCurrency = {
             ...budget.toJSON(),
-            amount: await convertCurrency(budget.amount, budget.currency, currency),
+            amount: await convertCurrency(budget.amount, budget.currency, currency.toUpperCase()),
             currency: currency,
         };
         console.log(budgetInClientCurrency)

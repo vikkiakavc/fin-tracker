@@ -1,34 +1,30 @@
-const express = require('express')
-const router = express.Router()
-const db = require('../db/index')
-const Budgets = db.budgets
-const auth = require('../middleware/auth')
-
+const express = require('express');
+const router = express.Router();
+const db = require('../db/index');
+const Budgets = db.budgets;
+const auth = require('../middleware/auth');
 
 router.post('/budgets', auth, async (req, res) => {
     try {
-        const { amount, currency, month } = req.body;
-        // console.log(typeof(amount))
-        const userId = req.user.id
-        // console.log(currency)
+        const { amount, currency, month, year } = req.body;
+        const userId = req.user.id;
 
-
-        // Check if a budget for the given month already exists
-        const existingBudget = await Budgets.findOne({ where: { month } });
-
+        // Check if a budget for the given month and year already exists
+        const existingBudget = await Budgets.findOne({ where: { month, year } });
 
         if (existingBudget) {
-            // update if exist
-            await Budgets.update({ amount, currency }, { where: { month } });
+            // Update if it exists
+            await Budgets.update({ amount, currency }, { where: { month, year } });
             res.status(200).send({
                 existingBudget,
-                message: "Budget updated successfully"
+                message: "Budget updated successfully",
             });
         } else {
-            const newBudget = await Budgets.create({ amount, month, currency, userId });
+            // Create a new budget
+            const newBudget = await Budgets.create({ amount, month, year, currency, userId });
             res.status(201).send({
                 newBudget,
-                message: "Budget created successfully"
+                message: "Budget created successfully",
             });
         }
     } catch (error) {
@@ -37,5 +33,4 @@ router.post('/budgets', auth, async (req, res) => {
     }
 });
 
-
-module.exports = router
+module.exports = router;

@@ -13,9 +13,9 @@ async function convertCurrency(amount, fromCurrency, toCurrency) {
   console.log(parseFloat(amount))
   console.log(fromCurrency)
   console.log(toCurrency)
-  // if (fromCurrency === toCurrency) {
-  //   return amount
-  // }
+  if (fromCurrency === toCurrency) {
+    return parseFloat(amount)
+  }
   try {
     let currencyConverter = new CC({ from: fromCurrency, to: toCurrency, amount: parseFloat(amount) })
     let convertedAmount = await currencyConverter.convert();
