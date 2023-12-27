@@ -8,21 +8,24 @@ const auth = require('../middleware/auth')
 router.post('/budgets', auth, async (req, res) => {
     try {
         const { amount, currency, month } = req.body;
-        console.log(typeof(amount))
+        // console.log(typeof(amount))
         const userId = req.user.id
-        console.log(currency)
+        // console.log(currency)
+
+
         // Check if a budget for the given month already exists
         const existingBudget = await Budgets.findOne({ where: { month } });
 
-        // update if exist
+
         if (existingBudget) {
+            // update if exist
             await Budgets.update({ amount, currency }, { where: { month } });
             res.status(200).send({
                 existingBudget,
                 message: "Budget updated successfully"
             });
         } else {
-            const newBudget = await Budgets.create({ amount, month, currency, userId});
+            const newBudget = await Budgets.create({ amount, month, currency, userId });
             res.status(201).send({
                 newBudget,
                 message: "Budget created successfully"

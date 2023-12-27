@@ -7,7 +7,7 @@ const budgetCtrl = require('./controllers/budgetCtrl.js')
 const reportCtrl = require('./controllers/reportCtrl.js')
 
 
-const port = 3000;
+const port = process.env.PORT;
 app.use(express.json());
 app.use(userCtrl)
 app.use(transactionCtrl)

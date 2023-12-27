@@ -3,11 +3,10 @@ const router = express.Router();
 const db = require('../db/index');
 const Transactions = db.transactions;
 const Budgets = db.budgets;
-// const Users = db.users;
 const auth = require('../middleware/auth');
 const { Op } = require('sequelize');
 const moment = require('moment');
-const convertCurrency = require('../utils/exchangeRateService'); // Import your exchange rate service
+const convertCurrency = require('../utils/currencyConverter');
 
 const monthNamesToNumbers = {
     'january': '01',
@@ -26,6 +25,9 @@ const monthNamesToNumbers = {
 
 router.get('/reports', auth, async (req, res) => {
     try {
+        // expecting input of month in string format from user like 'january', 'februry',...
+        // currency should be just currency codes like 'usd', 'inr', 'eur', ...
+        // year as full year like 2023
         const { month, currency, year } = req.query;
 
         // Validate input
@@ -33,6 +35,7 @@ router.get('/reports', auth, async (req, res) => {
             return res.status(400).json({ error: 'Month, currency, and year are required parameters' });
         }
 
+        // converting string months into numbers
         const monthNumber = monthNamesToNumbers[month.toLowerCase()];
 
         // Construct the start and end date for the month
@@ -56,10 +59,7 @@ router.get('/reports', auth, async (req, res) => {
                 month: month.toLowerCase(),
             },
         });
-        // console.log('=========================')
-        // console.log(budget)
-        // console.log('=========================')
-
+        console.log(budget)
 
         // Convert amounts to the client-specified currency
         const transactionsInClientCurrency = await Promise.all(transactions.map(async (transaction) => {
@@ -67,23 +67,22 @@ router.get('/reports', auth, async (req, res) => {
             return { ...transaction.toJSON(), amount: convertedAmount, currency: currency };
         }));
 
+        // Convert budget to the client-specified currency
         const budgetInClientCurrency = {
             ...budget.toJSON(),
             amount: await convertCurrency(budget.amount, budget.currency, currency),
             currency: currency,
         };
+        console.log(budgetInClientCurrency)
 
         // Now you have transactions and budget in the client-specified currency
         // console.log('Transactions in client currency:', transactionsInClientCurrency);
         // console.log('Budget in client currency:', budgetInClientCurrency);
-        // console.log('I am outtttttttt')
 
         // Calculate total income and expenses in the requested currency
         const totalIncome = transactionsInClientCurrency
             .filter(transaction => transaction.category === 'Income')
             .reduce((sum, transaction) => sum + transaction.amount, 0);
-
-        // console.log(totalIncome)
 
         const totalExpenses = transactionsInClientCurrency
             .filter(transaction => transaction.category === 'Expense')
@@ -93,7 +92,6 @@ router.get('/reports', auth, async (req, res) => {
         const remainingBudget = budgetInClientCurrency.amount - totalExpenses;
 
         // Respond with the financial report
-        // console.log('I am done')
         res.status(200).send({
             totalIncome,
             totalExpenses,

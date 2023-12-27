@@ -56,7 +56,7 @@ module.exports = (sequelize, DataTypes) => {
 
         const user = this
         // console.log(user)
-        const token = jwt.sign({ id: user.id.toString() }, 'secret_key')
+        const token = jwt.sign({ id: user.id.toString() }, process.env.JWT_SECRET)
         // Fetch the user to get the latest tokens array
         const existingTokens = user.getDataValue('tokens');
 

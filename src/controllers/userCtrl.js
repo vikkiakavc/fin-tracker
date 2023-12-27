@@ -5,7 +5,7 @@ const Users = db.users
 const auth = require('../middleware/auth')
 // const {sendWelcomeMail} = require('../email/emails')
 
-
+// register a new user
 router.post('/users/register', async (req, res) => {
     try{
         const user = await Users.create(req.body)
@@ -18,6 +18,7 @@ router.post('/users/register', async (req, res) => {
     }
 })
 
+// login user
 router.post('/users/login', async (req, res) => {
     try{
         const user = await Users.findByCredentials(req.body.email, req.body.password)
@@ -29,6 +30,7 @@ router.post('/users/login', async (req, res) => {
     }
 })
 
+// logout user
 router.post('/users/logout', auth, async(req,res) => {
     try{
         const user = req.user; // Retrieve the user from the auth middleware
@@ -47,6 +49,7 @@ router.post('/users/logout', auth, async(req,res) => {
     }
 })
 
+// logout from all devices
 router.post('/users/logoutAll', auth, async (req, res) => {
     try {
         console.log('I am here')
@@ -59,6 +62,7 @@ router.post('/users/logoutAll', auth, async (req, res) => {
     }
 })
 
+// get users profile
 router.get('/users/me', auth, async (req, res) => {
     res.send(req.user)
 })
