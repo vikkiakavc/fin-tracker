@@ -24,6 +24,7 @@ db.sequelize = sequelize;
 
 db.users = require('../models/users.js')(sequelize, DataTypes)
 db.transactions = require('../models/transaction.js')(sequelize, DataTypes)
+db.budgets = require('../models/budget.js')(sequelize, DataTypes)
 
 // one to many between users and transactions
 db.users.hasMany(db.transactions, {foreignKey: 'userId'})
