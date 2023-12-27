@@ -1,7 +1,7 @@
 module.exports = (sequelize, DataTypes) => {
     const Budgets = sequelize.define("budgets", {
         amount: {
-            type: DataTypes.DECIMAL(15, 2),
+            type: DataTypes.DECIMAL(10, 2),
             allowNull: false,
         },
         month: {
@@ -9,6 +9,13 @@ module.exports = (sequelize, DataTypes) => {
             allowNull: false,
             set(value) {
                 this.setDataValue("month", value.toLowerCase());
+            }
+        },
+        currency: {
+            type: DataTypes.STRING,
+            allowNull: false,
+            set(value) {
+                this.setDataValue("currency", value.toUpperCase());
             }
         },
         userId: {
