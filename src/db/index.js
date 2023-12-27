@@ -30,6 +30,10 @@ db.budgets = require('../models/budget.js')(sequelize, DataTypes)
 db.users.hasMany(db.transactions, {foreignKey: 'userId'})
 db.transactions.belongsTo(db.users, {foreignKey: 'userId'})
 
+// one to mant between users and budget
+db.users.hasMany(db.budgets, {foreignKey: 'userId'})
+db.budgets.belongsTo(db.users, {foreignKey: 'userId'})
+
 db.sequelize.sync({ force: false }).then(() => {
     console.log(' yes re-sync')
 })

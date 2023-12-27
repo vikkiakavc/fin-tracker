@@ -11,6 +11,10 @@ module.exports = (sequelize, DataTypes) => {
                 this.setDataValue("month", value.toLowerCase());
             }
         },
+        userId: {
+            type: DataTypes.INTEGER,
+            allowNull: false,
+        },
     })
     return Budgets
 }
