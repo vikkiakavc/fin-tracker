@@ -33,7 +33,7 @@ router.get('/transactions', auth, async (req, res) => {
     }
 });
 
-router.delete('/transactions/:id', async (req, res) => {
+router.delete('/transactions/:id', auth, async (req, res) => {
     const { id } = req.params;
     try {
         const transaction = await Transactions.findByPk(id);
