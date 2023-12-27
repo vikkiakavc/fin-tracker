@@ -25,7 +25,12 @@ router.post('/transactions', auth, async (req, res) => {
 
 router.get('/transactions', auth, async (req, res) => {
     try {
-        const transactions = await Transactions.findAll();
+        const userId = req.user.id
+        const transactions = await Transactions.findAll({
+            where: {
+                userId,
+            },
+        });
         res.status(200).json(transactions);
     } catch (error) {
         console.error(error);
