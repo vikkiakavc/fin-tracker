@@ -23,6 +23,11 @@ db.Sequelize = Sequelize;
 db.sequelize = sequelize;
 
 db.users = require('../models/users.js')(sequelize, DataTypes)
+db.transactions = require('../models/transaction.js')(sequelize, DataTypes)
+
+// one to many between users and transactions
+db.users.hasMany(db.transactions, {foreignKey: 'userId'})
+db.transactions.belongsTo(db.users, {foreignKey: 'userId'})
 
 db.sequelize.sync({ force: false }).then(() => {
     console.log(' yes re-sync')
