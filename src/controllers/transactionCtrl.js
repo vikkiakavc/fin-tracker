@@ -9,7 +9,7 @@ router.post('/transactions', auth, async (req, res) => {
     try {
         const { amount, category, paymentMethod, currency } = req.body;
         // Validate currency input
-        const isValidCurrency = validCurrencyCodes.includes(currency);
+        const isValidCurrency = validCurrencyCodes.includes(currency.toUpperCase());
         if (!isValidCurrency) {
             return res.status(404).send({ error: 'Invalid currency code' })
         }

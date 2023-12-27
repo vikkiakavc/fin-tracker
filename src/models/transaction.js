@@ -18,6 +18,9 @@ module.exports = (sequelize, DataTypes) => {
         currency: {
             type: DataTypes.STRING,
             allowNull: false,
+            set(value) {
+                this.setDataValue("currency", value.toUpperCase());
+            }
         },
         userId: {
             type: DataTypes.INTEGER,
